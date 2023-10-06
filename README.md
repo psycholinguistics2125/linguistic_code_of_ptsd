@@ -38,9 +38,18 @@ To make it work:  (3.9 will also work)
 ## 2. Usages
 
 To reproduce the results, you need to run the following scripts in the following order:
-1. for the data description, run all cell from data_description.ipynb
-2. for ht univariate language analysis between psychopathology and language : python main_stats.py
-3. for the machine learning analysis and interpretation, run python main_ml.py 100  (for the 100 iterations of the cross validation)
+
+1. for the data description, run all cell from [data_description](data_description.ipynb)
+
+2. for ht univariate language analysis between psychopathology and language:
+```
+python main_stats.py
+```
+
+3. for the machine learning analysis and interpretation:
+```
+run python main_ml.py 100  (for the 100 iterations of the cross validation)
+```
 
 All the result and generated figures can be found in ./results/ml_analysis and ./results/stats_analysis
 
