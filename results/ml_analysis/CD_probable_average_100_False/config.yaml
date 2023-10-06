@@ -1,0 +1,101 @@
+data:
+  data_folder: /home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/data/corpus
+  etude_1000_filename: socio_psycho_dataset.csv
+  features_choices:
+  - readability
+  - custom_ner
+  - passive
+  - graph
+  - sentiment
+  - morph
+  - tag
+  - coherence
+  - dysfluences
+  features_filename: text_features.csv
+  human_evaluation_filename: expert_eval.csv
+  nlp_filename: not available
+  nlp_folder: not available
+deepL_analysis: null
+hyperbase:
+  folder: /home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/data/hyperbase
+hyperdeep:
+  folder: /home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/data/hyperdeep
+ml_analysis:
+  add_random: true
+  best_param: false
+  custom:
+  - r'.*_probable'
+  data_aug: false
+  dummy:
+    strategy: most_frequent
+  ebm:
+    early_stopping_rounds: 20
+    interactions: 1
+    learning_rate: 0.0005
+    max_leaves: 10
+    max_rounds: 200
+    min_samples_leaf: 15
+    n_jobs: -1
+  elasticnet:
+    C: 0.1
+    class_weight: balanced
+    l1_ratio: 0.6
+    penalty: elasticnet
+    solver: saga
+  features:
+  - custom_ner
+  - passive
+  - graph
+  - morph
+  - readability
+  - dysfluences
+  - sentiments
+  group_name: exp_critereA
+  lasso:
+    C: 2.5
+    class_weight: balanced
+    penalty: l1
+    solver: liblinear
+  lr:
+    C: 0.1
+    class_weight: balanced
+    l1_ratio: 0.6
+    penalty: elasticnet
+    solver: saga
+  ml_folder: /home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/results/ml_analysis
+  over_ratio: 1.5
+  rf:
+    class_weight: balanced
+    criterion: entropy
+    max_features: sqrt
+    min_samples_leaf: 15
+    min_samples_split: 0.4
+    n_estimators: 40
+    n_jobs: -1
+  scaler: true
+  seed: 616
+  selected_cols: []
+  strati: exp_critereA
+  target: CD_probable
+  test_size: 0.2
+  under: true
+  under_ratio: 1
+results:
+  folder: /home/robin/Code_repo/statistical_analysis_toolbox/results/analysis
+  name: ''
+stats_analysis:
+  power: 0.5
+  saving_folder: /home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/results/stats_analysis
+  seuil: 0.05
+  target:
+  - full_and_partial_PTSD
+  - full_or_partial_PTSD
+  - CB_probable
+  - CC_probable
+  - CD_probable
+  - CD_probable_depression
+  - CD_probable_dissociation
+  - CE_probable
+  - CG_probable
+  - PTSD_probable
+  - partial_PTSD_probable
