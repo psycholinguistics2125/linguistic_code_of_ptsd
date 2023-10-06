@@ -1,7 +1,4 @@
 [![Code style: black](https://img.shields.io/badge/Code%20Style-Black-black)](https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html)
-
-
-
 [![DOI](https://zenodo.org/badge/701217702.svg)](https://zenodo.org/badge/latestdoi/701217702)
 
 
