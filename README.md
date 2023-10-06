@@ -22,7 +22,7 @@ The deep learning result can not be reproduce because it need to have access to 
 - [2. Usages](#2-usages)
 
 
-![](./data/image/research_abstract.png)
+![](./data/images/research_abstract.png)
 
 
 
