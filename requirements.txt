@@ -1,0 +1,11 @@
+scikit-learn
+seaborn
+pyyaml
+pandas
+lightgbm
+spacy
+imblearn
+interpret
+pingouin
+rfpimp
+hyperopt

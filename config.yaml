@@ -1,0 +1,91 @@
+results :
+  folder : "/home/robin/Code_repo/statistical_analysis_toolbox/results/analysis"
+  name : ""
+
+data :
+  nlp_folder : "not available"
+  nlp_filename : "not available"
+  data_folder : /home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/data/corpus
+  human_evaluation_filename : "expert_eval.csv"
+  etude_1000_filename : "socio_psycho_dataset.csv"
+  features_filename : "text_features.csv"
+  features_choices : ["readability","custom_ner","passive",'graph',"sentiment","morph","tag","coherence","dysfluences"]
+  
+    
+hyperbase :
+  folder : "/home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/data/hyperbase"
+
+hyperdeep :
+  folder : "/home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/data/hyperdeep"
+
+stats_analysis : 
+  target : ["full_and_partial_PTSD",'full_or_partial_PTSD' ,'CB_probable','CC_probable', 'CD_probable','CD_probable_depression','CD_probable_dissociation' ,'CE_probable','CG_probable','PTSD_probable', 'partial_PTSD_probable']
+  seuil: 0.05
+  power : 0.5
+  saving_folder : "/home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/results/stats_analysis"
+
+ml_analysis :
+  ml_folder : "/home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/results/ml_analysis"
+  add_random : True
+  best_param : False
+  seed : 0
+  test_size : 0.2
+  data_aug : False
+  over_ratio : 1.5
+  under : True
+  under_ratio : 1
+  scaler : True
+  group_name : "exp_critereA"
+  strati : "exp_critereA"
+  target : "full_or_partial_PTSD"
+  features : ["custom_ner","passive",'graph','morph','readability',"dysfluences","sentiments"]
+  selected_cols : [] #['MORT_EXPLICITE', 'SENSATIONS_PHYSIQUES', 'CORPS', 'score_troncations_matches', 'degree_average','average_clustering', 'L2', 'PE', 'passive_count', 'passive_count_norm', 'first_personal_pronoun_sing', 'L3', 'VERB_PERCEPTIONS_SENSORIELLES','LSC', 'score_temporal_connector_matches', 'ON_GENERIQUE', 'score_parenthetique_matches', 'verb_conditionel', 'PRESENT_GENERIQUE', 'average_shrotest_path_g0']
+  custom : [r'.*_probable']
+
+  
+  rf :
+    n_estimators : 40
+    n_jobs : -1
+    class_weight : "balanced"
+    criterion : "entropy"
+    max_features : "sqrt"
+    min_samples_leaf : 15
+    min_samples_split : 0.4
+
+  
+  ebm:
+    n_jobs : -1
+    interactions : 1
+    learning_rate : 0.0005
+    max_leaves : 10
+    min_samples_leaf : 15
+    #max_bins : 20
+    early_stopping_rounds: 20
+    max_rounds : 200
+
+  lr :
+    penalty : "elasticnet"
+    l1_ratio : 0.6
+    solver: "saga"
+    C : 0.1
+    class_weight : "balanced"
+
+  lasso :
+    penalty : "l1"
+    solver: "liblinear"
+    C : 2.5
+    class_weight : "balanced"
+
+  elasticnet :
+    penalty : "elasticnet"
+    l1_ratio : 0.6
+    solver: "saga"
+    C : 0.1
+    class_weight : "balanced"
+ 
+  dummy :
+    strategy : "most_frequent"
+
+
+
+deepL_analysis :
