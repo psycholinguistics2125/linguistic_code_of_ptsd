@@ -76,6 +76,7 @@ def compute_all_average(
     models_list=["brf", "lr", "rf", "lasso", "elasticnet", "lgb", "ebm"],
     logger=logging.getLogger(),
     targets_list=targets_list,
+    phase = 1
 ):
     """ 
     compute average scores, average roc auc, 
@@ -106,7 +107,7 @@ def compute_all_average(
 
         # compute k time the models
         results = compute_k_experiences(
-            data, config, k=try_number, model_list=models_list
+            data, config, k=try_number, model_list=models_list, phase = phase
         )
         # plot average roc aux curves
         compute_average_auc(results, config, save=True, selected_keys=models_list)
@@ -148,6 +149,7 @@ def compute_all_average(
         target = config["ml_analysis"]["target"]
         ml_folder = config["ml_analysis"]["ml_folder"]
         best_param = str(config["ml_analysis"]["best_param"])
+        #filter = config["ml_analysis"]["filter"]
         if save:
             logger.info(f"Saving... ")
             try:
@@ -165,7 +167,7 @@ def compute_all_average(
     return synthesis
 
 
-def compute_k_models(data:pd.DataFrame, config:dict, model_type:str, k=100):
+def compute_k_models(data:pd.DataFrame, config:dict, model_type:str, k=100,phase =1):
     """compute k models for a given model type
 
     Args:
@@ -198,7 +200,7 @@ def compute_k_models(data:pd.DataFrame, config:dict, model_type:str, k=100):
         config["ml_analysis"]["seed"] = seed
         ml_exp = MlAnalysis(config)
         train, train_label, test, test_label = ml_exp.get_train_test(
-            data, data_augmentation=data_aug
+            data, data_augmentation=data_aug, phase =phase
         )
         # print(train.columns)
         model = ml_exp.build_model(model_type=model_type)
@@ -225,6 +227,7 @@ def compute_k_experiences(
     config: dict,
     k=100,
     model_list=["ebm", "brf", "lr", "rf", "lasso", "elasticnet", "dt", "lda"],
+    phase =1,
 ) -> pd.DataFrame:
     """An experience is an ensemble of model with a set of define from config
 
@@ -241,7 +244,7 @@ def compute_k_experiences(
 
     results = {}
     for model_type in model_list:
-        results[model_type] = compute_k_models(data, config, model_type, k=k)
+        results[model_type] = compute_k_models(data, config, model_type, k=k,phase = phase)
     return results
 
 

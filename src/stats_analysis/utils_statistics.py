@@ -157,7 +157,7 @@ def compute_mwu(data: pd.DataFrame, x: str, y: str) -> dict:
     a = data[data[y] == 0][x]
     b = data[data[y] == 1][x]
     stats = pg.mwu(a, b).to_dict(orient="records")[0]
-    stats["cohen"] = pg.compute_effsize(a, b, eftype="cohen")
+    stats["cohen"] = pg.compute_effsize(b, a, eftype="cohen")
     stats["power"] = power_ttest2n(nx=len(a), ny=len(b), d=stats["cohen"], alpha=0.05)
 
     return stats

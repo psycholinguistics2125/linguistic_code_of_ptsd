@@ -5,7 +5,7 @@ results :
 data :
   nlp_folder : "not available"
   nlp_filename : "not available"
-  data_folder : /home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/data/corpus
+  data_folder : "/home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/data/corpus"
   human_evaluation_filename : "expert_eval.csv"
   etude_1000_filename : "socio_psycho_dataset.csv"
   features_filename : "text_features.csv"
@@ -19,13 +19,13 @@ hyperdeep :
   folder : "/home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/data/hyperdeep"
 
 stats_analysis : 
-  target : ["full_and_partial_PTSD",'full_or_partial_PTSD' ,'CB_probable','CC_probable', 'CD_probable','CD_probable_depression','CD_probable_dissociation' ,'CE_probable','CG_probable','PTSD_probable', 'partial_PTSD_probable']
+  target : ['full_or_partial_PTSD_probable' ,'CB_probable','CC_probable', 'CD_probable','CE_probable','CG_probable','PTSD_probable', 'partial_PTSD_probable',"CD_probable_dissociation","CD_probable_depression"]
   seuil: 0.05
-  power : 0.5
-  saving_folder : "/home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/results/stats_analysis"
+  power : 0.4
+  saving_folder : "/home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/results/stats_analysis/A1A2_phase12"
 
 ml_analysis :
-  ml_folder : "/home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/results/ml_analysis"
+  ml_folder : "/home/robin/Code_repo/psycholinguistic2125/linguistic_code_of_ptsd/results/ml_analysis/A1A2_phase2"
   add_random : True
   best_param : False
   seed : 0
@@ -36,21 +36,20 @@ ml_analysis :
   under_ratio : 1
   scaler : True
   group_name : "exp_critereA"
+  filter : "all" #all, A2, A1
+  sentiments: "origine" #all, valance_only, None
   strati : "exp_critereA"
-  target : "full_or_partial_PTSD"
+  target : "full_or_partial_PTSD_probable"
   features : ["custom_ner","passive",'graph','morph','readability',"dysfluences","sentiments"]
   selected_cols : [] #['MORT_EXPLICITE', 'SENSATIONS_PHYSIQUES', 'CORPS', 'score_troncations_matches', 'degree_average','average_clustering', 'L2', 'PE', 'passive_count', 'passive_count_norm', 'first_personal_pronoun_sing', 'L3', 'VERB_PERCEPTIONS_SENSORIELLES','LSC', 'score_temporal_connector_matches', 'ON_GENERIQUE', 'score_parenthetique_matches', 'verb_conditionel', 'PRESENT_GENERIQUE', 'average_shrotest_path_g0']
   custom : [r'.*_probable']
-
+  enq_cols :  ['Specifying_normalized_counts','Probing_normalized_counts','DirectQuestion_normalized_counts','FollowUp_normalized_counts', 'Interpreting_normalized_counts', 'Structuring_normalized_counts', 'Introductory_normalized_counts', 'Ending_normalized_counts', 'Other_normalized_counts', 'Reaction_normalized_counts', 'Lieux_normalized_counts', 'Media_normalized_counts', 'PersonalExperience_normalized_counts', 'CauseConsequences_normalized_counts', 'Nouvelle_normalized_counts', 'Temps_normalized_counts', 'Connaissance_normalized_counts']
+  fig_cols : ['figurative_ABSTRAIT_norm','figurative_ACTION_norm','figurative_ANIMAL_norm','figurative_ANIME_norm', 'figurative_ARTEFACT_norm', 'figurative_COMPARAISON_norm', 'figurative_CONCRET_norm', 'figurative_HUMAIN_norm', 'figurative_LIEU_norm', 'figurative_MATIERE_norm', 'figurative_METAPHORE_norm', 'figurative_NATUREL_norm', 'figurative_NON-ANIME_norm', 'figurative_OBJET_norm', 'figurative_PHRASE_norm', 'figurative_VEGETAL_norm', 'figurative_EVENEMENT_norm', 'figurative_T-Objet_norm', 'figurative_T-action_norm','figurative_T-armes_norm', 'figurative_T-autrui_norm', 'figurative_T-blessure_norm', 'figurative_T-foule_norm', 'figurative_T-locuteur_norm', 'figurative_T-morts_norm', 'figurative_T-situation spatio-temporelle_norm', 'figurative_T-terroristes_norm', 'figurative_T-victimes_norm', 'figurative_T-émotions / sensations_norm', 'EUPHEMISME_norm', 'TRIVIALITE_norm', 'METONYMIE_norm', 'METAPHORE_norm', 'COMPARAISON_norm', 'HYPERBOLE_norm', 'IRONIE_norm', 'SYNECDOQUE_norm', 'LITOTE_norm', 'POSITIF_norm']
   
   rf :
-    n_estimators : 40
+    n_estimators : 100
     n_jobs : -1
-    class_weight : "balanced"
-    criterion : "entropy"
-    max_features : "sqrt"
-    min_samples_leaf : 15
-    min_samples_split : 0.4
+    
 
   
   ebm:
@@ -64,19 +63,56 @@ ml_analysis :
     max_rounds : 200
 
   lr :
+    class_weight : "balanced"
+
+  lasso :
+    penalty : "l1"
+    solver: "liblinear"
+    class_weight : "balanced"
+
+  elasticnet :
+    penalty : "elasticnet"
+    l1_ratio : 0.5
+    class_weight : "balanced"
+ 
+  dummy :
+    strategy : "most_frequent"
+
+  
+  rf_phase1 :
+    n_estimators : 40
+    n_jobs : -1
+    class_weight : "balanced"
+    criterion : "entropy"
+    max_features : "sqrt"
+    min_samples_leaf : 15
+    min_samples_split : 0.4
+
+  
+  ebm_phase1:
+    n_jobs : -1
+    interactions : 1
+    learning_rate : 0.0005
+    max_leaves : 10
+    min_samples_leaf : 15
+    #max_bins : 20
+    early_stopping_rounds: 20
+    max_rounds : 200
+
+  lr_phase1 :
     penalty : "elasticnet"
     l1_ratio : 0.6
     solver: "saga"
     C : 0.1
     class_weight : "balanced"
 
-  lasso :
+  lasso_phase1 :
     penalty : "l1"
     solver: "liblinear"
     C : 2.5
     class_weight : "balanced"
 
-  elasticnet :
+  elasticnet_phase1 :
     penalty : "elasticnet"
     l1_ratio : 0.6
     solver: "saga"

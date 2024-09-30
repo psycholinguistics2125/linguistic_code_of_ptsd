@@ -127,12 +127,14 @@ class MlAnalysis:
                 selected_col.append(c)
 
         if "sentiments" in features_names_list:
-            for filters in [
-                r"textblob*",
-                "labMT",
-                r"feel_positive",
-                r"liwc_émo*",
-            ]:  # liwc_émo","liwc_mort","liw_corps",r"empath*", r"gobin*", r"feel*",r"polarimot*"
+            if self.config["ml_analysis"]["sentiments"] == "valence_only":
+                filter_list = [r"textblob*", "labMT", r"feel_positive",r"liwc_émo*",'polarimot_neutre','polarimot_negative',  'polarimot_positive', 'gobin_Valence',
+                                'gobin_PCpos', 'gobin_PCneg']
+            elif self.config["ml_analysis"]["sentiments"] == "all":
+                filter_list = [r"textblob*", "labMT", r"feel_*",r"liwc_émo*",'polarimot_*', 'gobin_*']
+            else:
+                filter_list = [ r"textblob*","labMT", r"feel_positive", r"liwc_émo*"]
+            for filters in filter_list:  # liwc_émo","liwc_mort","liw_corps",r"empath*", r"gobin*", r"feel*",r"polarimot*"
                 c = data.filter(regex=filters).columns.tolist()
                 selected_col.append(c)
 
@@ -178,7 +180,7 @@ class MlAnalysis:
                 "verb_participe_passe",
                 "verb_conditionel",
                 "verb_indicatif_imparfait",
-                "PQP_score",
+                #"PQP_score",
             ]
             selected_col.append(morph)
 
@@ -207,6 +209,15 @@ class MlAnalysis:
 
             selected_col.append(tag)
 
+        if "fig" in features_names_list:
+            fig_col = ['EUPHEMISME_norm','TRIVIALITE_norm', 'METONYMIE_norm', 
+                       'METAPHORE_norm',  'COMPARAISON_norm', 'HYPERBOLE_norm', 
+                       'IRONIE_norm', 'SYNECDOQUE_norm', 'LITOTE_norm', 'POSITIF_norm']
+            selected_col.append(fig_col)
+            for filters in [r"figurative_*"]:
+                c = data.filter(regex=filters).columns.tolist()
+                selected_col.append(c)
+
         if "dysfluences" in features_names_list:
             for filters in [
                 r"repetition_type_1",
@@ -231,11 +242,11 @@ class MlAnalysis:
         selected_col = (
             data[selected_col].select_dtypes(include=["float", "int"]).columns.tolist()
         )
-
+        #print(selected_col)
         return selected_col
 
     def get_train_test(
-        self, data, selected_col=None, data_augmentation=None, scaler=None
+        self, data, selected_col=None, data_augmentation=None, scaler=None,phase=1
     ) -> tuple:
         """
         split data in train and test set
@@ -257,8 +268,15 @@ class MlAnalysis:
                 selected_col = self.get_features(
                     data, self.config["ml_analysis"]["features"]
                 )
+                #self._logger.info(f"{len(selected_col)} features were selected")
+                #self._logger.info("using the get_features method to select features")
             else:
-                selected_col = self.config["ml_analysis"]["selected_cols"]
+                if phase == "1_enq":
+                    selected_col = self.config["ml_analysis"]["enq_cols"]
+                elif phase == "1_fig":
+                    selected_col = self.config["ml_analysis"]["fig_cols"]
+                else:
+                    selected_col = self.config["ml_analysis"]["selected_cols"]
         if self.verbose:
             self._logger.info(f"{len(selected_col)} features were selected")
 
@@ -350,7 +368,10 @@ class MlAnalysis:
                 )
                 # print(model_param)
                 # update config dict
-                self.config["ml_analysis"][self.model_type] = model_param
+                if self.verbose:
+                    self.config["ml_analysis"][self.model_type] = model_param
+                    self._logger.info(f"Best param for {self.model_type} model parameter loaded")
+                    self._logger.info(f" {model_param} selected")
             except Exception as e:
                 model_param = self.config["ml_analysis"][self.model_type]
             # self._logger.warning(f"Fail to load best param for {self.model_type} model parameter because of {e}")
@@ -542,3 +563,14 @@ class MlAnalysis:
             self._logger.info(f"Experience {self.experience_name} is done  ! ")
 
         return concat_result
+
+def load_models_param(target,model_type, config, score_name="auc"):
+    config['ml_analysis']["target"] = target
+    saving_folder = os.path.join(config['ml_analysis']['ml_folder'],f"{target}_finetunning")
+    best_param =  pd.read_csv(os.path.join(saving_folder,f"{model_type}_best_parameters_{score_name}.csv")).replace(np.nan, None)
+    
+    param_dict = best_param.to_dict(orient="records")[0]
+    
+    model_pram =  {key:param_dict[key] for key in list(param_dict.keys()) if key not in ['data_aug','scaler']}
+
+    return model_pram, param_dict['data_aug'], param_dict['scaler']

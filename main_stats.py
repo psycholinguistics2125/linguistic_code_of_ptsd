@@ -27,7 +27,7 @@ if __name__ == "__main__":
     logger = logging.getLogger()
     #load the features data
     config = utils.load_config()
-    data = load_features_and_meta(config)
+    data = load_features_and_meta(config,phase=12,exp_critereA = "A1A2")
 
     source_folder = config["data"]['data_folder']
 

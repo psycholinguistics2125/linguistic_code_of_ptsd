@@ -4,21 +4,35 @@ import numpy as np
 import random
 
 
-def load_features_and_meta(config: dict) -> pd.DataFrame:
+def load_features_and_meta(config: dict,phase=1,exp_critereA = "A1A2") -> pd.DataFrame:
     try:
-        meta_data = pd.read_csv(
-            os.path.join(
-                config["data"]["data_folder"], config["data"]["etude_1000_filename"]
-            ),
-            sep=",",
-        )
+        try :
+            meta_data = pd.read_csv(
+                os.path.join(
+                config["data"]["data_folder"],f"{exp_critereA}_phase{phase}" ,config["data"]["etude_1000_filename"]
+                ),
+                sep="\t",
+            )
+            assert len(meta_data.columns) > 1
+        except :
+            meta_data = pd.read_csv(
+                os.path.join(
+                config["data"]["data_folder"],f"{exp_critereA}_phase{phase}" ,config["data"]["etude_1000_filename"]
+                ),
+                sep=",",
+            )
         features = pd.read_csv(
             os.path.join(
-                config["data"]["data_folder"], config["data"]["features_filename"]
+                config["data"]["data_folder"], f"{exp_critereA}_phase{phase}",config["data"]["features_filename"]
             ),
             sep="\t",
         )
-        data = meta_data.merge(features, on="uuid")
+        
+
+        try :
+            data = meta_data.merge(features, on="uuid")
+        except :
+            data = meta_data.merge(features, on="code")
     except Exception as e:
         print(f"Fail to load merged data file because of {e}")
         data = pd.DataFrame()
